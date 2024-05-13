@@ -99,3 +99,22 @@ test("shoudl display hotels" , async ({ page }) => {
     //expect a add hotel buttton to be visible
     await expect(page.getByRole('link', { name: 'Add Hotel' })).toBeVisible();
 })
+
+test("should edit hotel", async ({ page }) => {
+    await page.goto(`${UI_URL}my-hotels`);
+
+    await page.getByRole('link', { name: 'View Details' }).first().click();
+
+    await page.waitForSelector('[name="name"]', { state: 'attached' });
+    await expect(page.locator('[name="name"]')).toHaveValue("Air Serbia");
+    await page.locator('[name="name"]').fill("Air Serbia UPDATED");
+    await page.getByRole('button', { name: 'Save' }).click();
+
+    await expect(page.getByText('Hotel updated successfully')).toBeVisible();
+
+    await page.reload();
+
+    await expect(page.locator('[name="name"]')).toHaveValue("Air Serbia UPDATED");
+    await page.locator('[name="name"]').fill("Air Serbia");
+    await page.getByRole('button', { name: 'Save' }).click();
+})
